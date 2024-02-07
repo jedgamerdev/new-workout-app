@@ -57,14 +57,21 @@ header a {
   color: #555;
 }
 .workout-details span {
-  position: absolute;
-  top: 20px;
   right: 20px;
   cursor: pointer;
   background: #f1f1f1;
   padding: 6px;
   border-radius: 50%;
-  color: #333;
+}
+.delete {
+  position: absolute;
+  top: 80px;
+  color: red;
+}
+.edit {
+  position: absolute;
+  top: 20px;
+  color: orange;
 }
 
 /* new workout form */
