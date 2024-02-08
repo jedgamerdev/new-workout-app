@@ -1,10 +1,12 @@
+import { useState } from "react";
 import { useWorkoutsContext } from "../hooks/useWorkoutsContext";
 
-// date fns
+import EditModal from "./home/EditModal.jsx";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
 const WorkoutDetails = ({ workout }) => {
   const { dispatch } = useWorkoutsContext();
+  const [showModal, setShowModal] = useState(false);
 
   const handleClick = async () => {
     const response = await fetch(
@@ -34,10 +36,18 @@ const WorkoutDetails = ({ workout }) => {
       <p>
         {formatDistanceToNow(new Date(workout.createdAt), { addSuffix: true })}
       </p>
-      <span className="material-symbols-outlined edit">edit</span>
+      <span
+        className="material-symbols-outlined edit"
+        onClick={() => setShowModal(true)}
+      >
+        edit
+      </span>
       <span className="material-symbols-outlined delete" onClick={handleClick}>
         delete
       </span>
+      {showModal && (
+        <EditModal workout={workout} onClose={() => setShowModal(false)} />
+      )}
     </div>
   );
 };
