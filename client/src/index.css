@@ -96,6 +96,7 @@ form button {
   font-family: "Poppins";
   border-radius: 4px;
   cursor: pointer;
+  margin: 5px 15px;
 }
 div.error {
   padding: 10px;
@@ -107,4 +108,29 @@ div.error {
 }
 input.error {
   border: 1px solid var(--error);
+}
+
+div.fixed {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 50;
+  background-color: #f9f9f9;
+  padding: 25px 50px;
+  border: 2px solid var(--primary);
+  border-radius: 15px;
+}
+
+button.cancel {
+  background: var(--error);
+}
+.submit {
+  background: var(--primary);
+  border: 0;
+  color: #fff;
+  padding: 10px;
+  font-family: "Poppins";
+  border-radius: 4px;
+  cursor: pointer;
 }
