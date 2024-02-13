@@ -13,6 +13,9 @@ body {
 }
 header {
   background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 header .container {
   max-width: 1400px;
@@ -122,7 +125,13 @@ div.fixed {
   border-radius: 15px;
 }
 
-button.cancel {
+.cancel {
+  border: 0;
+  color: #fff;
+  padding: 10px;
+  font-family: "Poppins";
+  border-radius: 4px;
+  cursor: pointer;
   background: var(--error);
 }
 .submit {
@@ -133,4 +142,12 @@ button.cancel {
   font-family: "Poppins";
   border-radius: 4px;
   cursor: pointer;
+}
+
+.form-btn {
+  display: flex;
+}
+
+.form-btn input:last-child {
+  margin-left: 10px;
 }

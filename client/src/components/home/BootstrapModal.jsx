@@ -1,16 +1,32 @@
-import { useState } from "react";
+import Modal from "react-bootstrap/Modal";
+import { useEffect, useState } from "react";
 import { useWorkoutsContext } from "../../hooks/useWorkoutsContext";
-import "./EditModal.css";
 
-const EditModal = ({ workout: initialWorkout, onClose }) => {
+function BootstrapModal({ workout: initialWorkout }) {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   const { dispatch } = useWorkoutsContext();
-
   const [workout, setWorkout] = useState({ ...initialWorkout });
   const [error, setError] = useState(null);
   const [emptyFields, setEmptyFields] = useState([]);
 
+  useEffect(() => {
+    const fetchWorkout = async () => {
+      const response = await fetch(
+        "http://localhost:3000/api/workouts/" + workout._id
+      );
+      const json = await response.json();
+
+      if (response.ok) {
+        setWorkout(json);
+      }
+    };
+
+    fetchWorkout();
+  }, [workout._id]);
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
     const response = await fetch(
       "http://localhost:3000/api/workouts/" + workout._id,
       {
@@ -36,13 +52,23 @@ const EditModal = ({ workout: initialWorkout, onClose }) => {
   };
 
   return (
-    <div className="edit-modal">
-      <div onClick={onClose} className="overlay">
-        <div className="modal-content">
-          <span className="material-symbols-outlined close-modal">close</span>
-          <form className="create" onSubmit={handleSubmit}>
-            <h3>Edit Workout</h3>
+    <>
+      <span className="material-symbols-outlined edit" onClick={handleShow}>
+        Edit
+      </span>
 
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Workout</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form className="create" onSubmit={handleSubmit}>
             <label>Exercise Title:</label>
             <input
               type="text"
@@ -71,13 +97,27 @@ const EditModal = ({ workout: initialWorkout, onClose }) => {
               className={emptyFields.includes("reps") ? "error" : ""}
               required={true}
             />
-            <input type="submit" value="Save" className="submit" />
-            {error && <div className="error">{error}</div>}
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-};
 
-export default EditModal;
+            {error && <div className="error">{error}</div>}
+            <div className="form-btn">
+              <input
+                type="button"
+                className="cancel"
+                value={"Cancel"}
+                onClick={handleClose}
+              />
+              <input
+                type="submit"
+                value={"Save"}
+                className="submit"
+                onClick={handleClose}
+              />
+            </div>
+          </form>
+        </Modal.Body>
+      </Modal>
+    </>
+  );
+}
+
+export default BootstrapModal;
