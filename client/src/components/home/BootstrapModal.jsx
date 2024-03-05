@@ -1,6 +1,7 @@
 import Modal from "react-bootstrap/Modal";
 import { useEffect, useState } from "react";
 import { useWorkoutsContext } from "../../hooks/useWorkoutsContext";
+import { useAuthContext } from "../../hooks/userAuthContext";
 
 function BootstrapModal({ workout: initialWorkout }) {
   const [show, setShow] = useState(false);
@@ -10,11 +11,19 @@ function BootstrapModal({ workout: initialWorkout }) {
   const [workout, setWorkout] = useState({ ...initialWorkout });
   const [error, setError] = useState(null);
   const [emptyFields, setEmptyFields] = useState([]);
-
+  const { user } = useAuthContext();
   useEffect(() => {
+    if (!user) {
+      return;
+    }
     const fetchWorkout = async () => {
       const response = await fetch(
-        "http://localhost:3000/api/workouts/" + workout._id
+        "http://localhost:3000/api/workouts/" + workout._id,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
       );
       const json = await response.json();
 
@@ -24,9 +33,13 @@ function BootstrapModal({ workout: initialWorkout }) {
     };
 
     fetchWorkout();
-  }, [workout._id]);
+  }, [workout._id, user]);
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!user) {
+      return;
+    }
     const response = await fetch(
       "http://localhost:3000/api/workouts/" + workout._id,
       {
@@ -34,6 +47,7 @@ function BootstrapModal({ workout: initialWorkout }) {
         body: JSON.stringify(workout),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
         },
       }
     );
